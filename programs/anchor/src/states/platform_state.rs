@@ -41,11 +41,6 @@ impl PlatformState {
 
     // record new order
     pub fn new_order(&mut self, amount_burnt: u64) {
-        // update total_service
-        self.total_service = self
-            .total_service
-            .checked_add(1)
-            .unwrap_or(self.total_service);
         // update total_consume
         self.total_consume = self
             .total_consume

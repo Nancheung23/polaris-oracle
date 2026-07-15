@@ -18,4 +18,8 @@ pub mod anchor {
     pub fn initialize(ctx: Context<Initialize>, price: u64, rate: u8) -> Result<()> {
         initialize::handler(ctx, price, rate)
     }
+
+    pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {
+        buy_ticket::handler(ctx)
+    }
 }

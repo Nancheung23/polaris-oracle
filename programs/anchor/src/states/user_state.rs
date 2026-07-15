@@ -32,4 +32,9 @@ impl UserState {
         self.timestamp = Clock::get()?.unix_timestamp;
         Ok(self.last_order_id)
     }
+
+    // update total consume and total burnt
+    pub fn new_order(&mut self, amount_consume: u64) {
+        self.total_consume = self.total_consume.checked_add(amount_consume).unwrap();
+    }
 }
