@@ -101,7 +101,9 @@ pub fn handler(ctx: Context<BuyTicket>) -> Result<()> {
         PlatformState::calculate_service(&ctx.accounts.platform_pda);
 
     // burn
-    token_interface::burn(cpi_burn_ctx, cpi_burn_amount)?;
+    if cpi_burn_amount > 0 {
+        token_interface::burn(cpi_burn_ctx, cpi_burn_amount)?;
+    }
     // transfer if not 100% burnt
     if cpi_transfer_amount > 0 {
         token_interface::transfer_checked(

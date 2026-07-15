@@ -22,4 +22,8 @@ pub mod anchor {
     pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {
         buy_ticket::handler(ctx)
     }
+
+    pub fn consume_ticket(ctx: Context<ConsumeTicket>) -> Result<()> {
+        consume_ticket::handler(ctx)
+    }
 }

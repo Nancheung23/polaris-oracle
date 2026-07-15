@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token_interface::Mint;
 
 use crate::{error::PolarisError, PlatformState, UserState, ADMIN, PLATFORM, USER};
 
@@ -13,10 +12,6 @@ pub struct ConsumeTicket<'info> {
         address = ADMIN @PolarisError::UnauthorizedAdmin,
     )]
     pub authority: SystemAccount<'info>,
-
-    // mint token
-    #[account(mut)]
-    pub mint: InterfaceAccount<'info, Mint>,
 
     // platform pda
     #[account(
