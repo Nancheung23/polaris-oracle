@@ -1,6 +1,10 @@
 pub mod buy_ticket;
 pub mod consume_ticket;
 pub mod initialize;
+pub mod update_platform_state;
+pub mod withdraw;
 pub use buy_ticket::*;
 pub use consume_ticket::*;
 pub use initialize::*;
+pub use update_platform_state::*;
+pub use withdraw::*;

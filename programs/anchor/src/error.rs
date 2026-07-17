@@ -6,4 +6,6 @@ pub enum PolarisError {
     UnauthorizedAdmin,
     #[msg("Insufficient Ticket")]
     InsuffientTicket,
+    #[msg("Invalid Rate")]
+    InvalidRate,
 }
