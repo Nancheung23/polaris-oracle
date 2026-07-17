@@ -54,6 +54,7 @@ pub fn handler(ctx: Context<Initialize>, price: u64, rate: u8) -> Result<()> {
         total_consume: 0,
         total_service: 0,
         total_burnt: 0,
+        paused: false,
         bump: ctx.bumps.platform_pda,
     });
     Ok(())

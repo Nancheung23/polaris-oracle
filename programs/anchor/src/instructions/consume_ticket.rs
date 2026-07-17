@@ -17,20 +17,25 @@ pub struct ConsumeTicket<'info> {
     #[account(
         mut,
         seeds = [PLATFORM, authority.key().as_ref()],
-        bump
+        bump,
+        constraint = !platform_pda.paused @ PolarisError::PlatformPaused
     )]
     pub platform_pda: Account<'info, PlatformState>,
     // user pda
     #[account(
         mut,
         seeds = [USER, authority.key().as_ref(), user.key().as_ref()],
-        bump
+        bump,
     )]
     pub user_pda: Account<'info, UserState>,
 }
 
 pub fn handler(ctx: Context<ConsumeTicket>) -> Result<()> {
     UserState::use_and_generate_id(&mut ctx.accounts.user_pda)?;
+    require!(
+        ctx.accounts.platform_pda.paused == false,
+        PolarisError::PlatformPaused
+    );
 
     ctx.accounts.platform_pda.total_service = ctx
         .accounts

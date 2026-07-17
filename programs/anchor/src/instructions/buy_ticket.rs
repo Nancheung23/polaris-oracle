@@ -60,6 +60,10 @@ pub struct BuyTicket<'info> {
 }
 
 pub fn handler(ctx: Context<BuyTicket>) -> Result<()> {
+    require!(
+        ctx.accounts.platform_pda.paused == false,
+        PolarisError::PlatformPaused
+    );
     // cpi program
     let cpi_program = ctx.accounts.token_program.to_account_info();
     // check if there's any data for user pda

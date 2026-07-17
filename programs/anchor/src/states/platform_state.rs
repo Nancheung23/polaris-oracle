@@ -19,6 +19,8 @@ pub struct PlatformState {
     pub total_service: u64,
     // statistics: total burnt
     pub total_burnt: u64,
+    // switch consume lock
+    pub paused: bool,
     // bump
     pub bump: u8,
 }
@@ -51,5 +53,11 @@ impl PlatformState {
             .total_burnt
             .checked_add(amount_burnt)
             .unwrap_or(self.total_burnt);
+    }
+
+    // paused
+    pub fn set_platform_paused(&mut self, paused: bool) {
+        // update platform paused
+        self.paused = paused;
     }
 }

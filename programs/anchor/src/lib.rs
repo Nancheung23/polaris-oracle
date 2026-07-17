@@ -26,4 +26,16 @@ pub mod anchor {
     pub fn consume_ticket(ctx: Context<ConsumeTicket>) -> Result<()> {
         consume_ticket::handler(ctx)
     }
+
+    pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+        withdraw::handler(ctx, amount)
+    }
+
+    pub fn update_platform_state(
+        ctx: Context<UpdatePlatformState>,
+        price: Option<u64>,
+        rate: Option<u8>,
+    ) -> Result<()> {
+        update_platform_state::handler(ctx, price, rate)
+    }
 }

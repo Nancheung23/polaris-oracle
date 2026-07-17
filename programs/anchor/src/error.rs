@@ -8,4 +8,6 @@ pub enum PolarisError {
     InsuffientTicket,
     #[msg("Invalid Rate")]
     InvalidRate,
+    #[msg("Platform paused")]
+    PlatformPaused,
 }
