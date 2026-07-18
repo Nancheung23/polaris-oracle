@@ -15,8 +15,13 @@ declare_id!("6rCqKLmJSCjrojzUgKWMiuohk15rxbTMeKRbGF5XcZJA");
 pub mod anchor {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>, price: u64, rate: u8) -> Result<()> {
-        initialize::handler(ctx, price, rate)
+    pub fn initialize(
+        ctx: Context<Initialize>,
+        price: u64,
+        rate: u8,
+        new_operator: Option<Pubkey>,
+    ) -> Result<()> {
+        initialize::handler(ctx, price, rate, new_operator)
     }
 
     pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {
@@ -35,7 +40,13 @@ pub mod anchor {
         ctx: Context<UpdatePlatformState>,
         price: Option<u64>,
         rate: Option<u8>,
+        // paused: Option<bool>,
+        new_operator: Option<Pubkey>,
     ) -> Result<()> {
-        update_platform_state::handler(ctx, price, rate)
+        update_platform_state::handler(ctx, price, rate, new_operator)
+    }
+
+    pub fn pause_platform(ctx: Context<PausePlatform>, paused: bool) -> Result<()> {
+        pause_platform::handler(ctx, paused)
     }
 }

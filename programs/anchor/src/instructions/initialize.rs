@@ -4,7 +4,7 @@ use anchor_spl::{
     token_interface::{Mint, TokenAccount, TokenInterface},
 };
 
-use crate::error::PolarisError;
+use crate::{constants, error::PolarisError};
 use crate::{PlatformState, ADMIN, DISCRIMNATOR, PLATFORM};
 
 // Instruction: Initialize, set up platform_state pda and create its ata
@@ -43,12 +43,23 @@ pub struct Initialize<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn handler(ctx: Context<Initialize>, price: u64, rate: u8) -> Result<()> {
+pub fn handler(
+    ctx: Context<Initialize>,
+    price: u64,
+    rate: u8,
+    new_operator: Option<Pubkey>,
+) -> Result<()> {
+    // determine operator wallet
+    let operator = match new_operator {
+        Some(operator) => operator,
+        _ => constants::OPERATOR,
+    };
     // initialize PlatformState PDA
     ctx.accounts.platform_pda.set_inner(PlatformState {
         authority: ctx.accounts.authority.key(),
         mint: ctx.accounts.mint.key(),
         vault: ctx.accounts.vault.key(),
+        operator: operator,
         price,
         rate,
         total_consume: 0,

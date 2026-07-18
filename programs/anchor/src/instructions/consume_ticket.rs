@@ -31,17 +31,9 @@ pub struct ConsumeTicket<'info> {
 }
 
 pub fn handler(ctx: Context<ConsumeTicket>) -> Result<()> {
+    // consume ticket
     UserState::use_and_generate_id(&mut ctx.accounts.user_pda)?;
-    require!(
-        ctx.accounts.platform_pda.paused == false,
-        PolarisError::PlatformPaused
-    );
-
-    ctx.accounts.platform_pda.total_service = ctx
-        .accounts
-        .platform_pda
-        .total_service
-        .checked_add(1)
-        .unwrap();
+    // update platform service
+    PlatformState::add_service(&mut ctx.accounts.platform_pda);
     Ok(())
 }

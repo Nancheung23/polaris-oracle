@@ -1,10 +1,14 @@
+pub mod airdrop;
 pub mod buy_ticket;
 pub mod consume_ticket;
 pub mod initialize;
+pub mod pause_platform;
 pub mod update_platform_state;
 pub mod withdraw;
+pub use airdrop::*;
 pub use buy_ticket::*;
 pub use consume_ticket::*;
 pub use initialize::*;
+pub use pause_platform::*;
 pub use update_platform_state::*;
 pub use withdraw::*;

@@ -119,7 +119,6 @@ pub fn handler(ctx: Context<BuyTicket>) -> Result<()> {
 
     // update user
     // update ticket amount
-    ctx.accounts.user_pda.tickets = ctx.accounts.user_pda.tickets.checked_add(1).unwrap();
     // update total_consume
     UserState::new_order(&mut ctx.accounts.user_pda, cpi_amount);
 

@@ -9,6 +9,8 @@ pub struct PlatformState {
     pub mint: Pubkey,
     // team vault
     pub vault: Pubkey,
+    // operator
+    pub operator: Pubkey,
     // current price(token amount) for service
     pub price: u64,
     // burn rate set defaultly per order (%)
@@ -54,10 +56,23 @@ impl PlatformState {
             .checked_add(amount_burnt)
             .unwrap_or(self.total_burnt);
     }
+    // service add
+    pub fn add_service(&mut self) {
+        // update total_service
+        self.total_service
+            .checked_add(1)
+            .unwrap_or(self.total_service);
+    }
 
     // paused
     pub fn set_platform_paused(&mut self, paused: bool) {
         // update platform paused
         self.paused = paused;
+    }
+
+    // update operator authority
+    pub fn update_operator(&mut self, new_operator: Pubkey) {
+        // update operator
+        self.operator = new_operator;
     }
 }

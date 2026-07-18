@@ -44,10 +44,8 @@ pub struct Withdraw<'info> {
 pub fn handler(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
     // check withdraw amount
     let withdraw_amount = std::cmp::min(amount, ctx.accounts.vault.amount);
-    if withdraw_amount == 0 {
-        msg!("vault amount: 0");
-        return Ok(());
-    }
+    require!(withdraw_amount > 0, PolarisError::InsuffientVaultBalance);
+
     let cpi_program = ctx.accounts.token_program.to_account_info();
     // ctx accounts
     let cpi_accounts = token_interface::TransferChecked {
