@@ -48,6 +48,7 @@ pub fn handler(
     price: u64,
     rate: u8,
     airdrop_requirement: u64,
+    airdrop_budget: u64,
     new_operator: Option<Pubkey>,
 ) -> Result<()> {
     // determine operator wallet
@@ -66,6 +67,7 @@ pub fn handler(
         total_consume: 0,
         total_service: 0,
         airdrop_requirement: airdrop_requirement,
+        airdrop_budget: airdrop_budget,
         total_burnt: 0,
         paused: false,
         bump: ctx.bumps.platform_pda,

@@ -3,15 +3,11 @@ use anchor_lang::prelude::*;
 use crate::{error::PolarisError, PlatformState, ADMIN, PLATFORM};
 
 #[derive(Accounts)]
-pub struct PausePlatform<'info> {
-    #[account(mut,
-    constraint = operator.key() == platform_pda.operator @ PolarisError::UnauthorizedOperator )]
-    pub operator: Signer<'info>,
-
+pub struct UpdateOperator<'info> {
     #[account(
         address = ADMIN @PolarisError::UnauthorizedAdmin
     )]
-    pub authority: SystemAccount<'info>,
+    pub authority: Signer<'info>,
 
     #[account(
         mut,
@@ -21,9 +17,12 @@ pub struct PausePlatform<'info> {
     pub platform_pda: Account<'info, PlatformState>,
 }
 
-pub fn handler(ctx: Context<PausePlatform>, paused: bool) -> Result<()> {
+pub fn handler(ctx: Context<UpdateOperator>, new_operator: Pubkey) -> Result<()> {
+    require!(
+        new_operator != Pubkey::default(),
+        PolarisError::InvalidNewOperator
+    );
     let platform = &mut ctx.accounts.platform_pda;
-    // set paused
-    PlatformState::set_platform_paused(platform, paused);
+    PlatformState::update_operator(platform, new_operator);
     Ok(())
 }

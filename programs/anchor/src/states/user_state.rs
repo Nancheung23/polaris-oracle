@@ -25,18 +25,21 @@ pub struct UserState {
 impl UserState {
     // for everytime use service, generate onchain order id, and update ticket amount
     pub fn use_and_generate_id(&mut self) -> Result<u64> {
-        require!(self.tickets > 0, PolarisError::InsuffientTicket);
+        require!(self.tickets > 0, PolarisError::InsufficientTicket);
         // update ticket and order id
-        self.tickets = self.tickets.checked_sub(1).unwrap_or(self.tickets);
+        self.tickets = self
+            .tickets
+            .checked_sub(1)
+            .ok_or(PolarisError::InsufficientTicket)?;
         self.last_order_id = self
             .last_order_id
             .checked_add(1)
-            .unwrap_or(self.last_order_id);
+            .ok_or(PolarisError::InsufficientTicket)?;
         // update timestamp and total service
         self.total_service = self
             .total_service
             .checked_add(1)
-            .unwrap_or(self.total_service);
+            .ok_or(PolarisError::InsufficientTicket)?;
         self.timestamp = Clock::get()?.unix_timestamp;
         Ok(self.last_order_id)
     }

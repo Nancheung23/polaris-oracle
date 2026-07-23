@@ -62,10 +62,14 @@ pub struct Airdrop<'info> {
 
 pub fn handler(ctx: Context<Airdrop>, airdrop_amount: u64) -> Result<()> {
     // check valid airdrop amount
-    let max_amount = ctx.accounts.vault.amount;
+    let budget = ctx.accounts.platform_pda.airdrop_budget;
     require!(
-        airdrop_amount <= max_amount,
-        PolarisError::InsuffientVaultBalance
+        airdrop_amount <= ctx.accounts.vault.amount,
+        PolarisError::InsufficientVaultBalance
+    );
+    require!(
+        airdrop_amount <= budget,
+        PolarisError::InsufficientAirdropBudget
     );
     let total_service = ctx.accounts.user_pda.total_service;
     // check recerived airdrop times
@@ -102,5 +106,11 @@ pub fn handler(ctx: Context<Airdrop>, airdrop_amount: u64) -> Result<()> {
     token_interface::transfer_checked(cpi_ctx, airdrop_amount, ctx.accounts.mint.decimals)?;
     // if succeed, airdrop times ++
     UserState::new_airdrop(&mut ctx.accounts.user_pda);
+    // update budget
+    let new_budget = budget
+        .checked_sub(airdrop_amount)
+        .ok_or(PolarisError::InsufficientAirdropBudget)?;
+    // update new budget
+    PlatformState::update_airdrop_budget(&mut ctx.accounts.platform_pda, new_budget);
     Ok(())
 }

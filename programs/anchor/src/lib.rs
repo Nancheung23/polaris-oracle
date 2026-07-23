@@ -20,9 +20,17 @@ pub mod anchor {
         price: u64,
         rate: u8,
         airdrop_requirement: u64,
+        airdrop_budget: u64,
         new_operator: Option<Pubkey>,
     ) -> Result<()> {
-        initialize::handler(ctx, price, rate, airdrop_requirement, new_operator)
+        initialize::handler(
+            ctx,
+            price,
+            rate,
+            airdrop_requirement,
+            airdrop_budget,
+            new_operator,
+        )
     }
 
     pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {
@@ -49,5 +57,16 @@ pub mod anchor {
 
     pub fn pause_platform(ctx: Context<PausePlatform>, paused: bool) -> Result<()> {
         pause_platform::handler(ctx, paused)
+    }
+
+    pub fn update_airdrop_requirement(
+        ctx: Context<UpdateAirdropRequirement>,
+        requirement: u64,
+    ) -> Result<()> {
+        update_airdrop_requirement::handler(ctx, requirement)
+    }
+
+    pub fn update_operator(ctx: Context<UpdateOperator>, new_operator: Pubkey) -> Result<()> {
+        update_operator::handler(ctx, new_operator)
     }
 }

@@ -35,5 +35,17 @@ pub fn handler(ctx: Context<ConsumeTicket>) -> Result<()> {
     UserState::use_and_generate_id(&mut ctx.accounts.user_pda)?;
     // update platform service
     PlatformState::add_service(&mut ctx.accounts.platform_pda);
+    emit!(ConsumeTicketEvent {
+        user: ctx.accounts.user.key(),
+        order_id: ctx.accounts.user_pda.last_order_id,
+        timestamp: Clock::get()?.unix_timestamp,
+    });
     Ok(())
+}
+
+#[event]
+pub struct ConsumeTicketEvent {
+    pub user: Pubkey,
+    pub order_id: u64,
+    pub timestamp: i64,
 }
