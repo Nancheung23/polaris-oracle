@@ -78,6 +78,7 @@ pub fn handler(ctx: Context<BuyTicket>) -> Result<()> {
             total_service: 0,
             last_order_id: 0,
             timestamp: Clock::get()?.unix_timestamp,
+            airdrop_times: 0,
             bump: ctx.bumps.user_pda,
         });
     }

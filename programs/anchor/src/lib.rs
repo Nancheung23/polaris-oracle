@@ -19,9 +19,10 @@ pub mod anchor {
         ctx: Context<Initialize>,
         price: u64,
         rate: u8,
+        airdrop_requirement: u64,
         new_operator: Option<Pubkey>,
     ) -> Result<()> {
-        initialize::handler(ctx, price, rate, new_operator)
+        initialize::handler(ctx, price, rate, airdrop_requirement, new_operator)
     }
 
     pub fn buy_ticket(ctx: Context<BuyTicket>) -> Result<()> {

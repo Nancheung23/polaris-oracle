@@ -14,4 +14,8 @@ pub enum PolarisError {
     UnauthorizedOperator,
     #[msg("Platform paused")]
     PlatformPaused,
+    #[msg("Not eligible user")]
+    NotEligibleUser,
+    #[msg("Math overflow")]
+    MathOverflow,
 }

@@ -17,6 +17,8 @@ pub struct UserState {
     pub last_order_id: u64,
     // last use time
     pub timestamp: i64,
+    // airdrop validator
+    pub airdrop_times: u64,
     // bump
     pub bump: u8,
 }
@@ -46,5 +48,13 @@ impl UserState {
             .checked_add(amount_consume)
             .unwrap_or(self.total_consume);
         self.tickets = self.tickets.checked_add(1).unwrap_or(self.tickets);
+    }
+
+    // update total airdrop times
+    pub fn new_airdrop(&mut self) {
+        self.airdrop_times = self
+            .airdrop_times
+            .checked_add(1)
+            .unwrap_or(self.airdrop_times);
     }
 }

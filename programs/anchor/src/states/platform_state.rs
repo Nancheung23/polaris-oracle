@@ -19,6 +19,8 @@ pub struct PlatformState {
     pub total_consume: u64,
     // statistics: total service
     pub total_service: u64,
+    // airdrop requirement
+    pub airdrop_requirement: u64,
     // statistics: total burnt
     pub total_burnt: u64,
     // switch consume lock
@@ -62,6 +64,11 @@ impl PlatformState {
         self.total_service
             .checked_add(1)
             .unwrap_or(self.total_service);
+    }
+
+    // update airdrop_requirement
+    pub fn update_airdrop_requirement(&mut self, requirement: u64) {
+        self.airdrop_requirement = requirement;
     }
 
     // paused
