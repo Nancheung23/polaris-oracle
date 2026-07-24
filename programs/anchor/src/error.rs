@@ -8,6 +8,8 @@ pub enum PolarisError {
     InsufficientTicket,
     #[msg("Insufficient Vault Balance")]
     InsufficientVaultBalance,
+    #[msg("Insufficient User Balance")]
+    InsufficientUserBalance,
     #[msg("Insufficient Airdrop Budget")]
     InsufficientAirdropBudget,
     #[msg("Invalid Rate")]
