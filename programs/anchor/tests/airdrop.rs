@@ -1,6 +1,7 @@
 mod common;
 use std::assert_eq;
 
+use anchor::error::PolarisError;
 use anchor_lang::{
     solana_program::{self, msg},
     AccountDeserialize,
@@ -257,4 +258,175 @@ fn test_airdrop_success() {
     assert_eq!(platform_state.total_consume, 300);
     assert_eq!(platform_state.total_burnt, 30);
     assert_eq!(platform_state.airdrop_budget, 900);
+}
+
+#[test]
+fn test_airdrop_failed() {
+    let mut test_context = setup();
+    // pdas
+    let platform_pda = platform_pda(&test_context.admin.pubkey());
+    let user_pda = user_pda(&test_context.admin.pubkey(), &test_context.user.pubkey());
+    // authority / mint
+    let vault = get_associated_token_address(&platform_pda, &test_context.mint.pubkey());
+    // ix for initialize
+    let ix = test_context
+        .svm
+        .program()
+        .accounts(anchor::accounts::Initialize {
+            authority: test_context.admin.pubkey(),
+            mint: test_context.mint.pubkey(),
+            platform_pda,
+            vault,
+            system_program: solana_program::system_program::ID,
+            token_program: TOKEN_PROGRAM_ID,
+            associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
+        })
+        .args(anchor::instruction::Initialize {
+            price: 100,
+            rate: 10,
+            airdrop_requirement: 100,
+            airdrop_budget: 1000,
+            new_operator: None,
+        })
+        .instruction()
+        .unwrap();
+    // send ix
+    let result = test_context
+        .svm
+        .svm
+        .send_instruction(ix, &[&test_context.admin]);
+    // assert
+    assert!(result.is_ok());
+
+    // create user ata
+    let user_ata = test_context
+        .svm
+        .svm
+        .create_associated_token_account(&test_context.mint.pubkey(), &test_context.user)
+        .unwrap();
+    test_context
+        .svm
+        .svm
+        .mint_to(
+            &test_context.mint.pubkey(),
+            &user_ata,
+            &test_context.admin,
+            10_000,
+        )
+        .unwrap();
+    // add tokens to vault
+    test_context
+        .svm
+        .svm
+        .mint_to(
+            &test_context.mint.pubkey(),
+            &vault,
+            &test_context.admin,
+            10_000,
+        )
+        .unwrap();
+    // ix for buy ticket
+    let ix = test_context
+        .svm
+        .program()
+        .accounts(anchor::accounts::BuyTicket {
+            user: test_context.user.pubkey(),
+            authority: test_context.admin.pubkey(),
+            mint: test_context.mint.pubkey(),
+            platform_pda,
+            user_pda,
+            vault,
+            user_ata,
+            system_program: solana_program::system_program::ID,
+            token_program: TOKEN_PROGRAM_ID,
+            associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
+        })
+        .args(anchor::instruction::BuyTicket {})
+        .instruction()
+        .unwrap();
+    // send ix
+    let result = test_context
+        .svm
+        .svm
+        .send_instruction(ix, &[&test_context.user]);
+    // assert
+    assert!(result.is_ok());
+
+    // ix for consume ticket
+    let ix = test_context
+        .svm
+        .program()
+        .accounts(anchor::accounts::ConsumeTicket {
+            user: test_context.user.pubkey(),
+            authority: test_context.admin.pubkey(),
+            platform_pda,
+            user_pda,
+        })
+        .args(anchor::instruction::ConsumeTicket {})
+        .instruction()
+        .unwrap();
+    // send ix
+    let result = test_context
+        .svm
+        .svm
+        .send_instruction(ix, &[&test_context.user]);
+    assert!(result.is_ok());
+
+    // ix for airdrop
+    let ix = test_context
+        .svm
+        .program()
+        .accounts(anchor::accounts::Airdrop {
+            operator: test_context.operator.pubkey(),
+            authority: test_context.admin.pubkey(),
+            user: test_context.user.pubkey(),
+            mint: test_context.mint.pubkey(),
+            platform_pda,
+            user_pda,
+            vault,
+            user_ata,
+            system_program: solana_program::system_program::ID,
+            token_program: TOKEN_PROGRAM_ID,
+            associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
+        })
+        .args(anchor::instruction::Airdrop {
+            airdrop_amount: 100,
+        })
+        .instruction()
+        .unwrap();
+    let result = test_context
+        .svm
+        .svm
+        .send_instruction(ix, &[&test_context.operator]);
+    let tx_result = result.unwrap();
+    // assert failed
+    let expected_code =
+        PolarisError::NotEligibleUser as u32 + anchor_lang::error::ERROR_CODE_OFFSET;
+    let error_str = TransactionResult::error(&tx_result).unwrap();
+    let actual_code: u32 = error_str
+        .split("Custom(")
+        .nth(1)
+        .and_then(|s| s.split(')').next())
+        .and_then(|s| s.parse().ok())
+        .expect("wrong code");
+    assert_eq!(expected_code, actual_code);
+
+    // deserialize pda
+    let account_data_platform = test_context.svm.svm.get_account(&platform_pda).unwrap();
+    let account_data_user = test_context.svm.svm.get_account(&user_pda).unwrap();
+    let platform_state: anchor::PlatformState =
+        anchor::PlatformState::try_deserialize(&mut account_data_platform.data.as_slice()).unwrap();
+    let user_state: anchor::UserState =
+        anchor::UserState::try_deserialize(&mut account_data_user.data.as_slice()).unwrap();
+    // assert attributes: user
+    assert_eq!(user_state.tickets, 0);
+    assert_eq!(user_state.total_consume, 100);
+    assert_eq!(user_state.total_service, 1);
+    assert_eq!(user_state.last_order_id, 1);
+    assert_eq!(user_state.airdrop_times, 0);
+    // assert attributes: platform
+    assert_eq!(platform_state.total_service, 1);
+    assert_eq!(platform_state.total_consume, 100);
+    assert_eq!(platform_state.total_burnt, 10);
+    assert_eq!(platform_state.airdrop_budget, 1000);
 }

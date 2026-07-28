@@ -85,7 +85,6 @@ fn test_buy_ticket_success() {
         .args(anchor::instruction::BuyTicket {})
         .instruction()
         .unwrap();
-
     // send ix
     let result = test_context
         .svm
@@ -93,6 +92,7 @@ fn test_buy_ticket_success() {
         .send_instruction(ix, &[&test_context.user]);
     // assert
     assert!(result.is_ok());
+
     // deserialize pda
     let account_data_platform = test_context.svm.svm.get_account(&platform_pda).unwrap();
     let account_data_user = test_context.svm.svm.get_account(&user_pda).unwrap();
