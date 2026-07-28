@@ -41,6 +41,10 @@ pub mod anchor {
         consume_ticket::handler(ctx)
     }
 
+    pub fn airdrop(ctx: Context<Airdrop>, airdrop_amount: u64) -> Result<()> {
+        airdrop::handler(ctx, airdrop_amount)
+    }
+
     pub fn withdraw(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
         withdraw::handler(ctx, amount)
     }

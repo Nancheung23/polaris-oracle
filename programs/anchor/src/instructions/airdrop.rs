@@ -27,6 +27,7 @@ pub struct Airdrop<'info> {
     pub mint: InterfaceAccount<'info, Mint>,
     // platform pda
     #[account(
+        mut,
         seeds = [PLATFORM, authority.key().as_ref()],
         bump
     )]
