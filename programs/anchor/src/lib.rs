@@ -9,7 +9,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use states::*;
 
-declare_id!("6rCqKLmJSCjrojzUgKWMiuohk15rxbTMeKRbGF5XcZJA");
+declare_id!("HCvsqbrTQ3mXVGrFUGkLrK467Ee5GUX9uQdLPYNKWsgQ");
 
 #[program]
 pub mod anchor {

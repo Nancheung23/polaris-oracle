@@ -3,10 +3,10 @@ use std::assert_eq;
 
 use anchor::error::PolarisError;
 use anchor_lang::{
-    solana_program::{self, msg},
+    solana_program::{self},
     AccountDeserialize,
 };
-use anchor_litesvm::{TestHelpers, TransactionError, TransactionHelpers, TransactionResult};
+use anchor_litesvm::{TestHelpers, TransactionHelpers, TransactionResult};
 use anchor_spl::{associated_token::get_associated_token_address, token::spl_token};
 use common::*;
 use solana_signer::Signer;

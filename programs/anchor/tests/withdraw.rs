@@ -1,25 +1,32 @@
 mod common;
 use std::assert_eq;
 
+use anchor::error::PolarisError;
 use anchor_lang::{
-    solana_program::{self},
+    solana_program::{self, msg},
     AccountDeserialize,
 };
 use anchor_litesvm::{TestHelpers, TransactionHelpers, TransactionResult};
-use anchor_spl::{associated_token::get_associated_token_address, token::spl_token};
+use anchor_spl::{
+    associated_token::get_associated_token_address, token::spl_token, token_interface::TokenAccount,
+};
 use common::*;
 use solana_signer::Signer;
 use spl_associated_token_account::ID as ASSOCIATED_TOKEN_PROGRAM_ID;
 use spl_token::ID as TOKEN_PROGRAM_ID;
 
 #[test]
-fn test_buy_ticket_success() {
+fn test_withdraw_success() {
     let mut test_context = setup();
     // pdas
     let platform_pda = platform_pda(&test_context.admin.pubkey());
-    let user_pda = user_pda(&test_context.admin.pubkey(), &test_context.user.pubkey());
     // authority / mint
     let vault = get_associated_token_address(&platform_pda, &test_context.mint.pubkey());
+    let authority_ata = test_context
+        .svm
+        .svm
+        .create_associated_token_account(&test_context.mint.pubkey(), &test_context.admin)
+        .unwrap();
     // ix for initialize
     let ix = test_context
         .svm
@@ -50,73 +57,67 @@ fn test_buy_ticket_success() {
         .send_instruction(ix, &[&test_context.admin]);
     // assert
     assert!(result.is_ok());
-    // create user ata
-    let user_ata = test_context
-        .svm
-        .svm
-        .create_associated_token_account(&test_context.mint.pubkey(), &test_context.user)
-        .unwrap();
+
+    // mint tokens to vault
     test_context
         .svm
         .svm
         .mint_to(
             &test_context.mint.pubkey(),
-            &user_ata,
+            &vault,
             &test_context.admin,
             10_000,
         )
         .unwrap();
-    // ix for buy ticket
+
+    // get vault token amount
+    let vault_account_before = test_context.svm.svm.get_account(&vault).unwrap();
+    let vault_token_before: TokenAccount =
+        TokenAccount::try_deserialize(&mut vault_account_before.data.as_slice()).unwrap();
+    let total_amount = vault_token_before.amount;
+
+    // ix for withdraw
     let ix = test_context
         .svm
         .program()
-        .accounts(anchor::accounts::BuyTicket {
-            user: test_context.user.pubkey(),
+        .accounts(anchor::accounts::Withdraw {
             authority: test_context.admin.pubkey(),
             mint: test_context.mint.pubkey(),
             platform_pda,
-            user_pda,
             vault,
-            user_ata,
+            authority_ata,
             system_program: solana_program::system_program::ID,
             token_program: TOKEN_PROGRAM_ID,
             associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
         })
-        .args(anchor::instruction::BuyTicket {})
+        .args(anchor::instruction::Withdraw { amount: 100 })
         .instruction()
         .unwrap();
-    // send ix
     let result = test_context
         .svm
         .svm
-        .send_instruction(ix, &[&test_context.user]);
-    // assert
+        .send_instruction(ix, &[&test_context.admin]);
     assert!(result.is_ok());
+    let vault_account_after = test_context.svm.svm.get_account(&vault).unwrap();
+    let vault_token_after: TokenAccount =
+        TokenAccount::try_deserialize(&mut vault_account_after.data.as_slice()).unwrap();
 
-    // deserialize pda
-    let account_data_platform = test_context.svm.svm.get_account(&platform_pda).unwrap();
-    let account_data_user = test_context.svm.svm.get_account(&user_pda).unwrap();
-    let platform_state: anchor::PlatformState =
-        anchor::PlatformState::try_deserialize(&mut account_data_platform.data.as_slice()).unwrap();
-    let user_state: anchor::UserState =
-        anchor::UserState::try_deserialize(&mut account_data_user.data.as_slice()).unwrap();
-    // assert attributes: user
-    assert_eq!(user_state.tickets, 1);
-    assert_eq!(user_state.total_consume, 100);
-    // assert attributes: platform
-    assert_eq!(platform_state.total_service, 0);
-    assert_eq!(platform_state.total_consume, 100);
-    assert_eq!(platform_state.total_burnt, 10);
+    assert_eq!(vault_token_after.amount, total_amount - 100);
+    assert_eq!(vault_token_after.amount, 9_900);
 }
 
 #[test]
-fn test_buy_ticket_failed() {
+fn test_withdraw_failed() {
     let mut test_context = setup();
     // pdas
     let platform_pda = platform_pda(&test_context.admin.pubkey());
-    let user_pda = user_pda(&test_context.admin.pubkey(), &test_context.user.pubkey());
     // authority / mint
     let vault = get_associated_token_address(&platform_pda, &test_context.mint.pubkey());
+    let authority_ata = test_context
+        .svm
+        .svm
+        .create_associated_token_account(&test_context.mint.pubkey(), &test_context.admin)
+        .unwrap();
     // ix for initialize
     let ix = test_context
         .svm
@@ -147,71 +148,56 @@ fn test_buy_ticket_failed() {
         .send_instruction(ix, &[&test_context.admin]);
     // assert
     assert!(result.is_ok());
-    // create user ata
-    let user_ata = test_context
-        .svm
-        .svm
-        .create_associated_token_account(&test_context.mint.pubkey(), &test_context.user)
-        .unwrap();
-    // mint less than 100
-    test_context
-        .svm
-        .svm
-        .mint_to(
-            &test_context.mint.pubkey(),
-            &user_ata,
-            &test_context.admin,
-            99,
-        )
-        .unwrap();
-    // ix for buy ticket
+
+    // get vault token amount
+    let vault_account_before = test_context.svm.svm.get_account(&vault).unwrap();
+    let vault_token_before: TokenAccount =
+        TokenAccount::try_deserialize(&mut vault_account_before.data.as_slice()).unwrap();
+    let total_amount = vault_token_before.amount;
+
+    // ix for withdraw
     let ix = test_context
         .svm
         .program()
-        .accounts(anchor::accounts::BuyTicket {
-            user: test_context.user.pubkey(),
+        .accounts(anchor::accounts::Withdraw {
             authority: test_context.admin.pubkey(),
             mint: test_context.mint.pubkey(),
             platform_pda,
-            user_pda,
             vault,
-            user_ata,
+            authority_ata,
             system_program: solana_program::system_program::ID,
             token_program: TOKEN_PROGRAM_ID,
             associated_token_program: ASSOCIATED_TOKEN_PROGRAM_ID,
         })
-        .args(anchor::instruction::BuyTicket {})
+        .args(anchor::instruction::Withdraw { amount: 100 })
         .instruction()
         .unwrap();
-
-    // send ix
-    let result = &test_context
+    let result = test_context
         .svm
         .svm
-        .send_instruction(ix, &[&test_context.user]);
-    // assert
+        .send_instruction(ix, &[&test_context.admin]);
     // assert!(result.is_err());
     assert!(
         !TransactionResult::error(result.as_ref().unwrap()).is_none(),
         "this result should be failed"
     );
-    // assert error code
-    assert!(
-        TransactionResult::error(result.as_ref().unwrap())
-            .unwrap()
-            .contains("Custom(1)"),
-        "InsufficientFunds, error: {}",
-        TransactionResult::error(result.as_ref().unwrap()).unwrap()
-    );
-    // deserialize pda
-    let account_data_platform = test_context.svm.svm.get_account(&platform_pda).unwrap();
-    // let account_data_user = test_context.svm.svm.get_account(&user_pda).unwrap();
-    let platform_state: anchor::PlatformState =
-        anchor::PlatformState::try_deserialize(&mut account_data_platform.data.as_slice()).unwrap();
-    // let user_state: anchor::UserState =
-    //     anchor::UserState::try_deserialize(&mut account_data_user.data.as_slice()).unwrap();
-    // assert attributes: platform
-    assert_eq!(platform_state.total_service, 0);
-    assert_eq!(platform_state.total_consume, 0);
-    assert_eq!(platform_state.total_burnt, 0);
+    // assert error code (3012: no user ata, 6001: custom)
+    let expected_code =
+        PolarisError::InsufficientVaultBalance as u32 + anchor_lang::error::ERROR_CODE_OFFSET;
+    let error_str = TransactionResult::error(result.as_ref().unwrap()).unwrap();
+    msg!("{}", error_str);
+    let actual_code: u32 = error_str
+        .split("Custom(")
+        .nth(1)
+        .and_then(|s| s.split(')').next())
+        .and_then(|s| s.parse().ok())
+        .expect("wrong code");
+    assert_eq!(expected_code, actual_code);
+
+    let vault_account_after = test_context.svm.svm.get_account(&vault).unwrap();
+    let vault_token_after: TokenAccount =
+        TokenAccount::try_deserialize(&mut vault_account_after.data.as_slice()).unwrap();
+
+    assert_eq!(vault_token_after.amount, total_amount);
+    assert_eq!(vault_token_after.amount, 0);
 }
