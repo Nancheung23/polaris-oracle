@@ -23,7 +23,7 @@ pub fn handler(
     price: Option<u64>,
     rate: Option<u8>,
     // pasued: Option<bool>,
-    new_operator: Option<Pubkey>,
+    // new_operator: Option<Pubkey>,
 ) -> Result<()> {
     let platform = &mut ctx.accounts.platform_pda;
     if let Some(new_price) = price {
@@ -36,8 +36,8 @@ pub fn handler(
     // if let Some(new_paused) = pasued {
     //     platform.paused = new_paused;
     // }
-    if let Some(new_operator) = new_operator {
-        platform.operator = new_operator;
-    }
+    // if let Some(new_operator) = new_operator {
+    //     platform.operator = new_operator;
+    // }
     Ok(())
 }
