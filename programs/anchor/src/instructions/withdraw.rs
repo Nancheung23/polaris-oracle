@@ -42,8 +42,15 @@ pub struct Withdraw<'info> {
 }
 
 pub fn handler(ctx: Context<Withdraw>, amount: u64) -> Result<()> {
+    // withdrawable
+    let withdrawable = ctx
+        .accounts
+        .vault
+        .amount
+        .checked_sub(ctx.accounts.platform_pda.airdrop_budget)
+        .unwrap_or(0);
     // check withdraw amount
-    let withdraw_amount = std::cmp::min(amount, ctx.accounts.vault.amount);
+    let withdraw_amount = std::cmp::min(amount, withdrawable);
     require!(withdraw_amount > 0, PolarisError::InsufficientVaultBalance);
 
     let cpi_program = ctx.accounts.token_program.to_account_info();

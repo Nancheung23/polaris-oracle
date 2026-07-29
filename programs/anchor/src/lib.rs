@@ -55,8 +55,9 @@ pub mod anchor {
         rate: Option<u8>,
         // paused: Option<bool>,
         // new_operator: Option<Pubkey>,
+        airdrop_budget: Option<u64>,
     ) -> Result<()> {
-        update_platform_state::handler(ctx, price, rate)
+        update_platform_state::handler(ctx, price, rate, airdrop_budget)
     }
 
     pub fn pause_platform(ctx: Context<PausePlatform>, paused: bool) -> Result<()> {

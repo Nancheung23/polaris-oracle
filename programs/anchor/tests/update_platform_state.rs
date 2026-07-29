@@ -1,7 +1,7 @@
 mod common;
 use anchor::error::PolarisError;
 use anchor_lang::{prelude::msg, solana_program, AccountDeserialize};
-use anchor_litesvm::{TransactionHelpers, TransactionResult};
+use anchor_litesvm::{TestHelpers, TransactionHelpers, TransactionResult};
 use anchor_spl::{associated_token::get_associated_token_address, token::spl_token};
 use common::*;
 use solana_signer::Signer;
@@ -45,17 +45,32 @@ fn test_update_platform_state_success() {
     // assert
     assert!(result.is_ok());
 
+    // give vault tokens
+    test_context
+        .svm
+        .svm
+        .mint_to(
+            &test_context.mint.pubkey(),
+            &vault,
+            &test_context.admin,
+            10_000,
+        )
+        .unwrap();
+
     // ix for update platform state
     let ix = test_context
         .svm
         .program()
         .accounts(anchor::accounts::UpdatePlatformState {
             authority: test_context.admin.pubkey(),
+            mint: test_context.mint.pubkey(),
             platform_pda,
+            vault,
         })
         .args(anchor::instruction::UpdatePlatformState {
             price: Some(50),
             rate: Some(20),
+            airdrop_budget: Some(500),
         })
         .instruction()
         .unwrap();
@@ -76,6 +91,7 @@ fn test_update_platform_state_success() {
         anchor::PlatformState::try_deserialize(&mut account_data.data.as_slice()).unwrap();
     assert_eq!(platform_state.price, 50);
     assert_eq!(platform_state.rate, 20);
+    assert_eq!(platform_state.airdrop_budget, 500);
 }
 
 #[test]
@@ -115,18 +131,32 @@ fn test_update_platform_state_failed() {
     // assert
     assert!(result.is_ok());
 
+    // give vault tokens
+    test_context
+        .svm
+        .svm
+        .mint_to(
+            &test_context.mint.pubkey(),
+            &vault,
+            &test_context.admin,
+            10_000,
+        )
+        .unwrap();
     // ix for update platform state
     let ix = test_context
         .svm
         .program()
         .accounts(anchor::accounts::UpdatePlatformState {
             authority: test_context.admin.pubkey(),
+            mint: test_context.mint.pubkey(),
             platform_pda,
+            vault,
         })
         .args(anchor::instruction::UpdatePlatformState {
             price: None,
             // invalid rate
             rate: Some(120),
+            airdrop_budget: None,
         })
         .instruction()
         .unwrap();
