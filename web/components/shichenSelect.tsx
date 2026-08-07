@@ -18,7 +18,7 @@ export function ShichenSelect({ value, onChange }: ShichenSelectProps) {
   return (
     <Select value={value} onValueChange={(v) => onChange(v as Shichen)}>
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="选择出生时辰" />
+        <SelectValue placeholder="Select birth hour" />
       </SelectTrigger>
       <SelectContent>
         {SHICHEN.map((item) => (

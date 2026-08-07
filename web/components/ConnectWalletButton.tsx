@@ -2,6 +2,7 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default function ConnectWalletButton() {
   const { connected, publicKey, disconnect } = useWallet();
@@ -16,8 +17,10 @@ export default function ConnectWalletButton() {
   }
 
   return (
+    <Link href="/reading">
     <Button onClick={() => setVisible(true)}>
       Connect Wallet
-    </Button>
+      </Button>
+    </Link>
   );
 }
