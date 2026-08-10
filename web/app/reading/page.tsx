@@ -31,7 +31,7 @@ export default function ReadingPage() {
   const isFormValid = name && gender && birthDate && shichen && location;
 
   const { refetch } = useUserTicket();
-  const { consumeTicket, consuming } = useConsumeTicket();
+  const { consumeTicket } = useConsumeTicket();
 
   async function handleSubmit(e: React.FormEvent) {
   e.preventDefault();

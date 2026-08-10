@@ -2,8 +2,7 @@
 
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import ConnectWalletButton from "./ConnectWalletButton";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import ConnectWalletButton from "./connectWalletButton";
 
 export default function Navbar() {
     // const {data: session } = useSession();

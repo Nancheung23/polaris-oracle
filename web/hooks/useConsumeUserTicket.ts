@@ -1,14 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useConnection, useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
 import { AnchorProvider } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
-import {
-  TOKEN_PROGRAM_ID
-} from "@solana/spl-token";
 import { getProgram } from "@/lib/program";
-import { PROGRAM_ID, ADMIN, MINT } from "@/lib/constants";
 
 export function useConsumeTicket() {
   const { connection } = useConnection();
