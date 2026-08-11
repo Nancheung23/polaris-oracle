@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "testDb": "tsx --env-file=.env.local scripts/testDb.ts",
-    "inspectTx": "tsx scripts/inspectTx.ts"
+    "inspectTx": "tsx scripts/inspectTx.ts",
+    "testOrderId": "tsx scripts/testOrderId.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

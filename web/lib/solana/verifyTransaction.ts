@@ -1,12 +1,8 @@
-import {
-  Connection,
-  PublicKey,
-  ParsedTransactionWithMeta,
-} from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import { PROGRAM_ID } from "@/lib/constants";
 import idl from "@/lib/idl.json";
-import { NextResponse } from "next/server";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
+import { RPC_URL } from "../constants/constants";
 
 interface VerifyResult {
   valid: boolean;
@@ -18,10 +14,7 @@ export async function verifyConsumeTicketTx(
   txSignature: string,
   walletAddress: string,
 ): Promise<VerifyResult> {
-  const connection = new Connection(
-    "https://api.devnet.solana.com",
-    "confirmed",
-  );
+  const connection = new Connection(RPC_URL, "confirmed");
   const tx = await connection.getParsedTransaction(txSignature, {
     maxSupportedTransactionVersion: 0,
   });
