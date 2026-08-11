@@ -9,7 +9,12 @@
     "lint": "eslint",
     "testDb": "tsx --env-file=.env.local scripts/testDb.ts",
     "inspectTx": "tsx scripts/inspectTx.ts",
-    "testOrderId": "tsx scripts/testOrderId.ts"
+    "testOrderId": "tsx scripts/testOrderId.ts",
+    "testIztro": "tsx scripts/testIztro.ts",
+    "testHoroscope": "tsx scripts/testHoroscope.ts",
+    "testDecadeTimelines": "tsx scripts/testDecadeTimelines.ts",
+    "testOverviewTable": "tsx scripts/testOverviewTable.ts",
+    "previewPrompts": "tsx scripts/previewPrompts.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -24,6 +29,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
+    "iztro": "^2.5.8",
     "lucide-react": "^1.30.0",
     "mongodb": "^7.5.0",
     "mongoose": "^9.9.1",

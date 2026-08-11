@@ -5,6 +5,8 @@ import { Report, User } from "@/lib/models";
 import { getLatestOrderId } from "@/lib/solana/getLastestOrderId";
 import { verifyConsumeTicketTx } from "@/lib/solana/verifyTransaction";
 import { NextRequest, NextResponse } from "next/server";
+import { getAstrolabe, formatDateForIztro } from "@/lib/iztro/getAstrolabe";
+import { summarizeAstrolabeForAI } from "@/lib/iztro/summarizeAstrolabe";
 interface GenerateReportRequest {
   name: string;
   gender: Gender;
