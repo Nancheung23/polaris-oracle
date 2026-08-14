@@ -2,15 +2,19 @@ import { AmbientBackground } from "@/components/ambientBackground";
 import { GitCompareArrows, CheckCircle2, Clock } from "lucide-react";
 
 const SHIPPED_FEATURES = [
-  "AI-generated Zi Wei Dou Shu readings covering personality, career, wealth, relationships, and decade-by-decade timelines",
-  "On-chain ticketing on Solana — buy once, use once, no subscriptions",
-  "Per-reading AI payment via the x402 protocol, with a portion of every payment burned",
-  "Multi-reading history — generate and revisit as many readings as you like",
+  "Full natal chart calculation using traditional Zi Wei Dou Shu (紫微斗数) methodology: \ntwelve palaces, major and minor stars, natal Four Transformations, and flying self-transformations, all computed deterministically",
+  "Decade and yearly cycle mapping across the first eight decades of life, showing which palace governs each period and how the Four Transformations shift year to year",
+  "AI-written readings that translate the raw chart data into plain-English personality insights and practical guidance: \nno astrology background required to understand your own reading",
+  "On-chain ticketing on Solana: \nbuy a ticket once, consume it once, no subscriptions or recurring charges",
+  "Per-reading AI inference paid for via the x402 payment protocol, with a portion of every payment burned on-chain",
+  "Multi-reading history: \ngenerate and revisit as many readings as you like, each tied to your wallet",
 ];
 
 const UPCOMING_FEATURES = [
-  "Daily fortune / short daily reading based on your existing natal chart",
-  // TODO: 补充其他计划中的功能
+  "Daily fortune: \nshort daily reading based on your existing natal chart",
+  "Airdrop campaigns for loyal users",
+  "Team-initiated token burns, announced transparently",
+  "Ticket gifting between wallets",
 ];
 
 export default function AboutPage() {
@@ -18,19 +22,19 @@ export default function AboutPage() {
     <div className="relative">
       <AmbientBackground />
       <div className="container mx-auto px-4 py-24 max-w-3xl">
-        {/* 履历介绍 */}
         <section className="mb-16">
           <h1 className="text-4xl font-bold mb-6">About</h1>
           <div className="rounded-2xl border bg-white/70 backdrop-blur-sm p-8">
-            {/* TODO: 替换成真实履历/自我介绍 */}
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Hi, I&apos;m [YOUR NAME]. I&apos;m a [YOUR ROLE/BACKGROUND],
-              building Polaris Oracle as a way to combine my interest in [Zi Wei
-              Dou Shu / blockchain / AI — 按实际情况改] with hands-on Solana
-              development.
+              Hi, I&apos;m Nan. I&apos;m a ICT student from TAMK(Tampere
+              University of Applied Sciences), building Polaris Oracle as a way
+              to put my interest in fullstack development and blockchain into
+              practice.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              {/* TODO: 补充第二段，比如项目缘起、你的技术栈背景等 */}
+              I&apos;m interested in fullstack development and blockchain, this
+              project started because I wanted to build something I&apos;d
+              actually use myself.
             </p>
             <a
               href="https://github.com/Nancheung23"
@@ -44,7 +48,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* 已上线功能 */}
         <section className="mb-16">
           <h2 className="text-2xl font-semibold mb-6">
             What Polaris Oracle does today
@@ -59,7 +62,6 @@ export default function AboutPage() {
           </ul>
         </section>
 
-        {/* 待开发功能 */}
         <section>
           <h2 className="text-2xl font-semibold mb-6">What&apos;s coming</h2>
           <ul className="space-y-3">
@@ -71,8 +73,8 @@ export default function AboutPage() {
             ))}
           </ul>
           <p className="text-xs text-muted-foreground mt-6">
-            These are ongoing ideas, not commitments — timelines may shift as
-            the project evolves.
+            These are ongoing ideas, not commitments, timelines may shift as the
+            project evolves.
           </p>
         </section>
       </div>

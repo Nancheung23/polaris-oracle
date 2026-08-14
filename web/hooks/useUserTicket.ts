@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useConnection, useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
+import {
+  useConnection,
+  useWallet,
+  useAnchorWallet,
+} from "@solana/wallet-adapter-react";
 import { AnchorProvider } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-import {
-  TOKEN_PROGRAM_ID
-} from "@solana/spl-token";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { getProgram } from "@/lib/program";
 import { PROGRAM_ID, ADMIN, MINT } from "@/lib/constants";
 
@@ -19,10 +21,14 @@ export function useUserTicket() {
   const [loading, setLoading] = useState(false);
   const [buying, setBuying] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [totalConsume, setTotalConsume] = useState<number | null>(null);
+  const [totalService, setTotalService] = useState<number | null>(null);
 
   const fetchTickets = useCallback(async () => {
     if (!publicKey || !anchorWallet) {
       setTickets(null);
+      setTotalConsume(null);
+      setTotalService(null);
       return;
     }
     setLoading(true);
@@ -33,27 +39,31 @@ export function useUserTicket() {
 
       const [userPda] = PublicKey.findProgramAddressSync(
         [Buffer.from("user"), ADMIN.toBuffer(), publicKey.toBuffer()],
-        PROGRAM_ID
+        PROGRAM_ID,
       );
 
-    const account = await program.account.userState.fetch(userPda);
-    setTickets(Number(account.tickets));
+      const account = await program.account.userState.fetch(userPda);
+      setTickets(Number(account.tickets));
+      setTotalConsume(Number(account.totalConsume));
+      setTotalService(Number(account.totalService));
     } catch {
       setTickets(0);
+      setTotalConsume(0);
+      setTotalService(0);
     } finally {
       setLoading(false);
     }
   }, [publicKey, anchorWallet, connection]);
 
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            await fetchTickets();
-            })();
-            return () => {
-                cancelled = true;
-                };
-    }, [fetchTickets]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      await fetchTickets();
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchTickets]);
 
   const buyTicket = useCallback(async () => {
     if (!publicKey || !anchorWallet) return;
@@ -66,19 +76,28 @@ export function useUserTicket() {
       await program.methods
         .buyTicket()
         .accounts({
-            mint: MINT,
-            tokenProgram: TOKEN_PROGRAM_ID,
+          mint: MINT,
+          tokenProgram: TOKEN_PROGRAM_ID,
         })
         .rpc();
 
-      await fetchTickets(); 
+      await fetchTickets();
     } catch (e: unknown) {
-  const message = e instanceof Error ? e.message : "Failed to buy ticket";
-  setError(message);
-}finally {
+      const message = e instanceof Error ? e.message : "Failed to buy ticket";
+      setError(message);
+    } finally {
       setBuying(false);
     }
   }, [publicKey, anchorWallet, connection, fetchTickets]);
 
-  return { tickets, loading, buying, error, buyTicket, refetch: fetchTickets };
+  return {
+    tickets,
+    totalConsume,
+    totalService,
+    loading,
+    buying,
+    error,
+    buyTicket,
+    refetch: fetchTickets,
+  };
 }

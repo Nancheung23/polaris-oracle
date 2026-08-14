@@ -8,6 +8,8 @@ import { useUserTicket } from "@/hooks/useUserTicket";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles, Ticket, ArrowRight } from "lucide-react";
+import { UserStatsSection } from "@/components/userStateSection";
+import { ComingSoonButton } from "@/components/comingSoonButton";
 
 export default function ReadingDashboard() {
   const { connected } = useWallet();
@@ -99,8 +101,11 @@ export default function ReadingDashboard() {
               ))}
             </div>
           </div>
-
           <div className="space-y-4">
+            <ComingSoonButton
+              label="Daily Fortune"
+              message="Daily Fortune is coming soon, check back later!"
+            />
             <Card className="bg-white/70 backdrop-blur-sm border">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
@@ -132,6 +137,7 @@ export default function ReadingDashboard() {
             </Link>
           </div>
         </div>
+        <UserStatsSection />
       </div>
     </div>
   );

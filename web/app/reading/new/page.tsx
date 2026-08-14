@@ -20,6 +20,8 @@ import { AmbientBackground } from "@/components/ambientBackground";
 import { useUserTicket } from "@/hooks/useUserTicket";
 import { useConsumeTicket } from "@/hooks/useConsumeUserTicket";
 import { useWallet } from "@solana/wallet-adapter-react";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function NewReadingPage() {
   const router = useRouter();
@@ -90,6 +92,14 @@ export default function NewReadingPage() {
       <div className="container mx-auto px-4">
         <TicketGate>
           <div className="max-w-md mx-auto py-16">
+            <Link
+              href="/reading"
+              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition mb-6"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to My Readings
+            </Link>
+
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold mb-2">
                 Enter Your Birth Details
@@ -159,13 +169,24 @@ export default function NewReadingPage() {
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 
-              <Button
-                type="submit"
-                className="w-full h-11"
-                disabled={loading || !isFormValid}
-              >
-                {loading ? "Submitting..." : "Generate My Reading"}
-              </Button>
+              <div className="flex gap-3">
+                <Link href="/reading" className="flex-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full h-11"
+                  >
+                    Cancel
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  className="flex-1 h-11"
+                  disabled={loading || !isFormValid}
+                >
+                  {loading ? "Submitting..." : "Generate My Reading"}
+                </Button>
+              </div>
             </form>
           </div>
         </TicketGate>
