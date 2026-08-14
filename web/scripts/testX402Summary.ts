@@ -6,8 +6,10 @@ import { summarizeAstrolabeForAI } from "@/lib/iztro/summarizeAstrolabe";
 import { ZIWEI_SYSTEM_PROMPT } from "@/lib/ai/prompts/ziweiSystemPrompt";
 import { buildCoreAnalysisPrompt } from "@/lib/ai/prompts/buildCoreAnalysisPrompt";
 import { buildTopicsPrompt } from "@/lib/ai/prompts/buildTopicsPrompt";
+import { buildSummaryPrompt } from "@/lib/ai/prompts/buildSummaryPrompt";
 import { callX402Api } from "@/lib/x402/client";
 import { parseAIJson } from "@/lib/ai/parseAIJson";
+import { ZIWEI_DISCLAIMER } from "@/lib/ai/disclaimer";
 
 interface ClaudeLlmResponse {
   content: string;
@@ -55,10 +57,9 @@ async function main() {
   });
 
   const chartSummary = summarizeAstrolabeForAI(astrolabe);
+  let totalCost = 0;
 
-  // Step 1: Core analysis
   console.log("=== Call 1: Core Analysis ===");
-  console.time("core analysis");
   const coreRes = await callHaiku(
     buildCoreAnalysisPrompt({
       name: "Test Client",
@@ -67,16 +68,11 @@ async function main() {
     }),
     2048,
   );
-  console.timeEnd("core analysis");
-  console.log("Cost:", coreRes.usage.cost);
-
+  totalCost += coreRes.usage.cost;
   const coreAnalysis = parseAIJson<CoreAnalysisResult>(coreRes.content);
-  console.log("basic length:", coreAnalysis.basic.length);
-  console.log("analysis length:", coreAnalysis.analysis.length);
+  console.log("Done. Cost:", coreRes.usage.cost);
 
-  // Step 2: Topics
   console.log("\n=== Call 2: Topics ===");
-  console.time("topics");
   const topicsRes = await callHaiku(
     buildTopicsPrompt({
       name: "Test Client",
@@ -86,29 +82,33 @@ async function main() {
     }),
     2048,
   );
-  console.timeEnd("topics");
-  console.log("Cost:", topicsRes.usage.cost);
-
+  totalCost += topicsRes.usage.cost;
   const topics = parseAIJson<TopicsResult>(topicsRes.content);
+  console.log("Done. Cost:", topicsRes.usage.cost);
 
-  console.log("\n--- Topics content ---\n");
-  for (const [key, value] of Object.entries(topics)) {
-    console.log(`[${key}] (${value.length} chars)\n${value}\n`);
-  }
+  console.log("\n=== Call 3: Summary ===");
+  console.time("summary");
+  const summaryRes = await callHaiku(
+    buildSummaryPrompt({ name: "Test Client", coreAnalysis, topics }),
+    1024,
+  );
+  console.timeEnd("summary");
+  totalCost += summaryRes.usage.cost;
+  console.log("Cost:", summaryRes.usage.cost);
+
+  // summary 是纯文本，不是 JSON，不走 parseAIJson
+  const aiSummary = summaryRes.content.trim();
+  const finalSummary = `${aiSummary}\n\n${ZIWEI_DISCLAIMER}`;
+
+  console.log(`\n--- AI summary (${aiSummary.length} chars) ---\n`);
+  console.log(aiSummary);
 
   console.log(
-    "\n--- Self-transformations reference (for manual cross-check) ---",
+    `\n--- Final summary with disclaimer appended (${finalSummary.length} chars) ---\n`,
   );
-  chartSummary.palaces.forEach((p) => {
-    if (p.selfTransformations.length > 0) {
-      console.log(`${p.name}:`, p.selfTransformations);
-    }
-  });
+  console.log(finalSummary);
 
-  console.log(
-    "\nTotal cost this run:",
-    coreRes.usage.cost + topicsRes.usage.cost,
-  );
+  console.log("\nTotal cost this run:", totalCost);
 }
 
 main().catch((err) => {

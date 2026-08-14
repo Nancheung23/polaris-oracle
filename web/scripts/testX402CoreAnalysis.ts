@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import { parseAIJson } from "@/lib/ai/parseAiJson";
+import { parseAIJson } from "@/lib/ai/parseAIJson";
 import { getAstrolabe, formatDateForIztro } from "@/lib/iztro/getAstrolabe";
 import { summarizeAstrolabeForAI } from "@/lib/iztro/summarizeAstrolabe";
-import { ZIWEI_SYSTEM_PROMPT } from "@/lib/ai/prompts/ziweiSystemPromt";
-import { buildCoreAnalysisPrompt } from "@/lib/ai/prompts/buildCoreAnalysisPromt";
+import { ZIWEI_SYSTEM_PROMPT } from "@/lib/ai/prompts/ziweiSystemPrompt";
+import { buildCoreAnalysisPrompt } from "@/lib/ai/prompts/buildCoreAnalysisPrompt";
 import { callX402Api } from "@/lib/x402/client";
 
 interface ClaudeLlmResponse {

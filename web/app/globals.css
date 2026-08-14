@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -129,5 +131,65 @@
 
   html {
     @apply font-sans;
+  }
+}
+
+@keyframes float-a {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(120px, 90px) scale(1.15);
+  }
+}
+
+@keyframes float-b {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(-100px, 110px) scale(1.1);
+  }
+}
+
+@keyframes float-c {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(80px, -90px) scale(1.2);
+  }
+}
+
+@keyframes twinkle {
+
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+
+  50% {
+    opacity: 0.05;
+  }
+}
+
+@keyframes float-d {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(calc(-50% + 60px), calc(-50% - 70px)) scale(1.25);
   }
 }

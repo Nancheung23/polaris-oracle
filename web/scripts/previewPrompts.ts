@@ -1,11 +1,11 @@
 import { getAstrolabe, formatDateForIztro } from "@/lib/iztro/getAstrolabe";
 import { summarizeAstrolabeForAI } from "@/lib/iztro/summarizeAstrolabe";
 import { getDecadeTimelines } from "@/lib/iztro/getDecadeTimelines";
-import { ZIWEI_SYSTEM_PROMPT } from "@/lib/ai/prompts/ziweiSystemPromt";
-import { buildCoreAnalysisPrompt } from "@/lib/ai/prompts/buildCoreAnalysisPromt";
-import { buildTopicsPrompt } from "@/lib/ai/prompts/buildTopicsPromt";
-import { buildSummaryPrompt } from "@/lib/ai/prompts/buildSummaryPromt";
-import { buildDecadePrompt } from "@/lib/ai/prompts/buildDecadePromt";
+import { ZIWEI_SYSTEM_PROMPT } from "@/lib/ai/prompts/ziweiSystemPrompt";
+import { buildCoreAnalysisPrompt } from "@/lib/ai/prompts/buildCoreAnalysisPrompt";
+import { buildTopicsPrompt } from "@/lib/ai/prompts/buildTopicsPrompt";
+import { buildSummaryPrompt } from "@/lib/ai/prompts/buildSummaryPrompt";
+import { buildDecadePrompt } from "@/lib/ai/prompts/buildDecadePrompt";
 import fs from "node:fs";
 
 const birthDate = new Date("2000-08-16");

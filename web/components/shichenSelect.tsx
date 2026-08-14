@@ -10,7 +10,7 @@ import {
 import { SHICHEN, type Shichen } from "@/lib/constants/shichen";
 
 interface ShichenSelectProps {
-  value: Shichen | undefined;
+  value: Shichen | "";
   onChange: (value: Shichen) => void;
 }
 

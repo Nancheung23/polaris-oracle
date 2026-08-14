@@ -13,6 +13,7 @@ interface YearlyHoroscopeSummary {
 export interface DecadeTimelineSummary {
   decadeIndex: number;
   ageRange: [number, number];
+  governingPalaceName: string;
   years: YearlyHoroscopeSummary[];
 }
 
@@ -55,6 +56,7 @@ export function getDecadeTimelines(
     return {
       decadeIndex,
       ageRange: [startAge, endAge] as [number, number],
+      governingPalaceName: palace.name,
       years,
     };
   });
