@@ -21,7 +21,8 @@
     "testX402Topics": "tsx scripts/testX402Topics.ts",
     "testX402Summary": "tsx scripts/testX402Summary.ts",
     "testX402Decade": "tsx scripts/testX402Decade.ts",
-    "testGenerateReport": "tsx scripts/testGenerateReportContent.ts"
+    "testGenerateReport": "tsx scripts/testGenerateReportContent.ts",
+    "testMintAuthority": "tsx scripts/checkMintAuthority.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -1,0 +1,17 @@
+{
+  "name": "Polaris Oracle Token",
+  "symbol": "POT",
+  "description": "Utility token for Polaris Oracle — burned with every AI-powered Zi Wei Dou Shu reading generated on Solana.",
+  "image": "https://raw.githubusercontent.com/Nancheung23/polaris-oracle/main/public/tokenLogo.png",
+  "external_url": "https://github.com/Nancheung23/polaris-oracle",
+  "attributes": [],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://raw.githubusercontent.com/Nancheung23/polaris-oracle/main/public/tokenLogo.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}
