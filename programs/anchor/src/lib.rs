@@ -10,7 +10,7 @@ pub use instructions::*;
 pub use states::*;
 
 // declare_id!("HCvsqbrTQ3mXVGrFUGkLrK467Ee5GUX9uQdLPYNKWsgQ");
-declare_id!("3V6DpJwfhoukwL2o3BZtS4Erb6JwAVAbNZdymLzxBvYt");
+declare_id!("ont4DTMFdivKEbCvv6oFSpsyNqDjKWhntWXSyG2GnLs");
 #[program]
 pub mod anchor {
     use super::*;

@@ -58,7 +58,9 @@ export function TokenInfoSection() {
       <div className="mx-auto max-w-3xl">
         <div className="rounded-2xl border bg-white/80 backdrop-blur-sm p-8 sm:p-10">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-2">The Token</h2>
+            <h2 className="text-3xl font-bold mb-2">
+              Polaris Oracle Token $POT
+            </h2>
             <p className="text-muted-foreground">
               Every reading burns a portion of its cost, permanently reducing
               supply.

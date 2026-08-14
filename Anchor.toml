@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-anchor = "HCvsqbrTQ3mXVGrFUGkLrK467Ee5GUX9uQdLPYNKWsgQ"
+anchor = "ont4DTMFdivKEbCvv6oFSpsyNqDjKWhntWXSyG2GnLs"
 
 [provider]
 cluster = "localnet"
