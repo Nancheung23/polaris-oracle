@@ -9,6 +9,7 @@ import { Sparkles, ShieldAlert } from "lucide-react";
 import Image from "next/image";
 import { ReadingOutline } from "@/components/readingOutline";
 import { BackToTop } from "@/components/backToTop";
+import { getSummaryImage } from "@/lib/summaryImageMap";
 
 const TOPIC_IMAGES: Record<string, string> = {
   health: "/topics/health.jpg",
@@ -179,7 +180,11 @@ export default function ReportDetailPage() {
           </div>
         </div>
         <div id="summary">
-          <SectionCard title="Summary" highlight image="/topics/summary.jpg">
+          <SectionCard
+            title="Summary"
+            highlight
+            image={getSummaryImage(content.overview)}
+          >
             <MarkdownContent content={summaryOnly} />
           </SectionCard>
         </div>
