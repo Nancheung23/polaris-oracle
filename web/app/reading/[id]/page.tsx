@@ -243,7 +243,7 @@ function SectionCard({
       }`}
     >
       {image && (
-        <div className="relative h-32 w-full">
+        <div className="relative h-64 w-full">
           <Image
             src={image}
             alt=""
@@ -251,9 +251,10 @@ function SectionCard({
             sizes="(min-width: 768px) 768px, 100vw"
             className="object-cover"
           />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-white" />
         </div>
       )}
-      <div className="p-6">
+      <div className="p-6 -mt-6 relative">
         <h2 className="text-lg font-semibold mb-3">{title}</h2>
         {children}
       </div>
