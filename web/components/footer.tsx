@@ -12,7 +12,6 @@ export function Footer() {
               Polaris Oracle
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
-              {/* TODO: 一句话产品简介 */}
               AI-powered Zi Wei Dou Shu readings, paid for on Solana.
             </p>
           </div>
@@ -24,7 +23,7 @@ export function Footer() {
                 Home
               </Link>
               <Link
-                href="/fate-definition"
+                href="/fateDefinition"
                 className="hover:text-primary transition"
               >
                 Fate Definition
