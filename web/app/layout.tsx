@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/navbar";
 import { SolanaProvider } from "@/components/provider/Solana";
 import { Footer } from "@/components/footer";
+import { BackgroundMusic } from "@/components/backgroundMusic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </SolanaProvider>
+        <BackgroundMusic />
       </body>
     </html>
   );
