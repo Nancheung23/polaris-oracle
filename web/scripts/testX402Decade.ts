@@ -30,7 +30,6 @@ async function main() {
   const chartSummary = summarizeAstrolabeForAI(astrolabe);
   const decadeTimelines = getDecadeTimelines(astrolabe, birthDate);
 
-  // 挑第2个大限（ages 13-22）测试，之前手工验证过这段数据准确
   const targetDecade = decadeTimelines[1];
 
   console.log(

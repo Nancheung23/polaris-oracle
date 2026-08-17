@@ -56,7 +56,6 @@ async function main() {
 
   const chartSummary = summarizeAstrolabeForAI(astrolabe);
 
-  // Step 1: Core analysis
   console.log("=== Call 1: Core Analysis ===");
   console.time("core analysis");
   const coreRes = await callHaiku(
@@ -74,7 +73,6 @@ async function main() {
   console.log("basic length:", coreAnalysis.basic.length);
   console.log("analysis length:", coreAnalysis.analysis.length);
 
-  // Step 2: Topics
   console.log("\n=== Call 2: Topics ===");
   console.time("topics");
   const topicsRes = await callHaiku(

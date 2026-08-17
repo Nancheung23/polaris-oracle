@@ -34,7 +34,7 @@ export function useReports() {
   }, [publicKey]);
 
   useEffect(() => {
-    fetchReports();
+    queueMicrotask(() => fetchReports());
   }, [fetchReports]);
 
   return { reports, loading, refetch: fetchReports };

@@ -96,7 +96,6 @@ async function main() {
   totalCost += summaryRes.usage.cost;
   console.log("Cost:", summaryRes.usage.cost);
 
-  // summary 是纯文本，不是 JSON，不走 parseAIJson
   const aiSummary = summaryRes.content.trim();
   const finalSummary = `${aiSummary}\n\n${ZIWEI_DISCLAIMER}`;
 

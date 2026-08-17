@@ -35,7 +35,7 @@ async function main() {
 
   const mintKeypair = Keypair.generate();
   console.log("New mint address:", mintKeypair.publicKey.toBase58());
-  console.log("⚠️ 保存这个mint的私钥（下面会打印），后面建元数据要用");
+  console.log("mint private key");
   console.log("Mint secret (base58):", bs58.encode(mintKeypair.secretKey));
 
   const lamports = await getMinimumBalanceForRentExemptMint(connection);
